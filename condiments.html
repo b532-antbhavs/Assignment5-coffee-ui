@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Condiments - Coffee Order</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Coffee Order System</h1>
+            <div class="order-status">Order Status: Add Condiments</div>
+        </header>
+
+        <main>
+            <div class="page-layout">
+                <div class="condiment-selection">
+                    <h2>Add condiments</h2>
+                    <div class="condiment-options">
+                        <div class="condiment-card" data-condiment="milk">Milk</div>
+                        <div class="condiment-card" data-condiment="mocha">Mocha</div>
+                        <div class="condiment-card" data-condiment="soy">Soy</div>
+                        <div class="condiment-card" data-condiment="whip">Whip</div>
+                    </div>
+                </div>
+                
+                <div class="order-summary">
+                    <h3>My Order</h3>
+                    <div id="selected-beverage" class="selected-item removable"></div>
+                    <div id="condiment-list"></div>
+                    <button id="confirm-order-btn">Confirm Order</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const beverage = localStorage.getItem('selectedBeverage');
+            const selectedBeverageDisplay = document.getElementById('selected-beverage');
+            const condimentList = document.getElementById('condiment-list');
+            const condimentCards = document.querySelectorAll('.condiment-card');
+            const confirmOrderBtn = document.getElementById('confirm-order-btn');
+            
+            let selectedCondiments = [];
+            
+            selectedBeverageDisplay.textContent = beverage;
+            selectedBeverageDisplay.dataset.beverage = beverage;
+            
+            condimentCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const condiment = this.dataset.condiment;
+                    
+                    if (!selectedCondiments.includes(condiment)) {
+                        selectedCondiments.push(condiment);
+                    } else {
+                        selectedCondiments = selectedCondiments.filter(c => c !== condiment);
+                    }
+                    renderCondimentList();
+                });
+            });
+            
+            function renderCondimentList() {
+                condimentList.innerHTML = '';
+                selectedCondiments.forEach(condiment => {
+                    const item = document.createElement('div');
+                    item.className = 'condiment-item removable';
+                    item.textContent = condiment;
+                    item.dataset.condiment = condiment;
+                    
+                    item.addEventListener('click', function() {
+                        selectedCondiments = selectedCondiments.filter(c => c !== condiment);
+                        renderCondimentList();
+                    });
+                    
+                    condimentList.appendChild(item);
+                });
+            }
+            
+            selectedBeverageDisplay.addEventListener('click', function() {
+                localStorage.removeItem('selectedBeverage');
+                window.location.href = 'index.html';
+            });
+            
+            confirmOrderBtn.addEventListener('click', async function() {
+                const orderData = {
+                    beverage: beverage,
+                    condiments: selectedCondiments
+                };
+                
+                try {
+                    const response = await placeOrder(orderData);
+                    localStorage.setItem('orderResponse', JSON.stringify(response));
+                    window.location.href = 'confirmation.html';
+                } catch (error) {
+                    alert('Error placing order: ' + error.message);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

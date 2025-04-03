@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Beverage - Coffee Order</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Coffee Order System</h1>
+            <div class="order-status">Order Status: Select Beverage</div>
+        </header>
+
+        <main>
+            <h2>Select your beverage</h2>
+            <div class="beverage-options">
+                <div class="beverage-card" data-beverage="dark roast">
+                    <h3>Dark Roast</h3>
+                </div>
+                <div class="beverage-card" data-beverage="espresso">
+                    <h3>Espresso</h3>
+                </div>
+                <div class="beverage-card" data-beverage="house blend">
+                    <h3>House Blend</h3>
+                </div>
+                <div class="beverage-card" data-beverage="decaf">
+                    <h3>Decaf</h3>
+                </div>
+            </div>
+            <button id="next-btn" disabled>Continue to Condiments</button>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const beverageCards = document.querySelectorAll('.beverage-card');
+            const nextBtn = document.getElementById('next-btn');
+            let selectedBeverage = null;
+
+            beverageCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    beverageCards.forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    
+                    nextBtn.disabled = false;
+                    
+                    selectedBeverage = this.dataset.beverage;
+                });
+            });
+
+            nextBtn.addEventListener('click', function() {
+                if (selectedBeverage) {
+                    localStorage.setItem('selectedBeverage', selectedBeverage);
+                    window.location.href = 'condiments.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

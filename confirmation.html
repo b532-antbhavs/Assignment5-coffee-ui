@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Coffee Order</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Coffee Order System</h1>
+            <div class="order-status">Order Status: Confirmation</div>
+        </header>
+
+        <main>
+            <h2>Order Placed</h2>
+            <div class="order-details">
+                <p>Order id: <span id="order-id"></span></p>
+                <p id="order-description"></p>
+                <p>Total: $<span id="order-total"></span></p>
+            </div>
+            <button id="new-order-btn">Start New Order</button>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const orderResponse = JSON.parse(localStorage.getItem('orderResponse'));
+            const orderId = document.getElementById('order-id');
+            const orderDescription = document.getElementById('order-description');
+            const orderTotal = document.getElementById('order-total');
+            const newOrderBtn = document.getElementById('new-order-btn');
+            
+            if (orderResponse) {
+                orderId.textContent = orderResponse.id;
+                orderDescription.textContent = orderResponse.description;
+                orderTotal.textContent = orderResponse.cost.toFixed(2);
+            }
+            
+            newOrderBtn.addEventListener('click', function() {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>
