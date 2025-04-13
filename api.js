@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'https://assignment5-coffee-order-1.onrender.com';
 
 async function placeOrder(orderData) {
     try {
